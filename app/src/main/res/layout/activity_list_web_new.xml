@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/normal_padding"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Danh sách các trang báo hiện có"
+        android:textAlignment="center"
+        android:textSize="@dimen/headline_1_text_size"/>
+
+    <TextView
+        android:id="@+id/tvVnExpress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/normal_padding"
+        android:background="@drawable/custom_rounded_border_web_news"
+        android:layout_marginVertical="@dimen/normal_padding"
+        android:text="VnExpress"/>
+
+    <TextView
+        android:id="@+id/tvTinhTe"
+        android:layout_width="wrap_content"
+        android:padding="@dimen/normal_padding"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_rounded_border_web_news"
+        android:text="TinhTe"/>
+
+</LinearLayout>

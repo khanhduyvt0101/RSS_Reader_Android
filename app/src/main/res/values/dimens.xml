@@ -1,3 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="vertical_padding">16dp</dimen>
+    <dimen name="horizontal_padding">12dp</dimen>
+    <dimen name="normal_padding">10dp</dimen>
+    <dimen name="large_padding">16dp</dimen>
+    <dimen name="super_large_padding">40dp</dimen>
+    <dimen name="normal_padding_space">15dp</dimen>
+    <dimen name="padding_start_end_join_pulse">45dp</dimen>
+    <dimen name="padding_top_bottom_join_pulse">8dp</dimen>
+    <dimen name="image_default_height">256dp</dimen>
+    <dimen name="default_corner_radius">4dp</dimen>
+    <dimen name="default_stroke_width">1dp</dimen>
+    <dimen name="filter_padding">9dp</dimen>
+
+    <dimen name="large_title_text_size">24sp</dimen>
+    <dimen name="large_title_line_height">32sp</dimen>
+    <dimen name="headline_1_text_size">22sp</dimen>
+    <dimen name="headline_1_line_height">30sp</dimen>
+    <dimen name="headline_2_text_size">18sp</dimen>
+    <dimen name="headline_2_line_height">26sp</dimen>
+    <dimen name="body_1_text_size">16sp</dimen>
+    <dimen name="body_1_line_height">24sp</dimen>
+    <dimen name="body_2_text_size">14sp</dimen>
+    <dimen name="body_2_line_height">21sp</dimen>
+    <dimen name="pulse_status_text_size">12sp</dimen>
+    <dimen name="pulse_status_line_height">18sp</dimen>
+    <dimen name="filter_height">35sp</dimen>
+
+
+    <dimen name="home_button_width">180dp</dimen>
+    <dimen name="react_item_card_view_radius">10dp</dimen>
+
+    <dimen name="width_tab_menu">120dp</dimen>
+    <dimen name="height_tab_menu">30dp</dimen>
 </resources>

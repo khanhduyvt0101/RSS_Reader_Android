@@ -1,12 +1,12 @@
-package com.example.rss_reader_android_kms;
+package com.example.rss_reader_android_kms.items;
 
-public class ModelRecyclerView {
+public class ItemRecyclerView {
 
     public String title;
     public String link;
     public String description;
 
-    public ModelRecyclerView(String title, String link, String description) {
+    public ItemRecyclerView(String title, String link, String description) {
         this.title = title;
         this.link = link;
         this.description = description;

@@ -1,4 +1,4 @@
-package com.example.rss_reader_android_kms;
+package com.example.rss_reader_android_kms.modules.rssreader;
 
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
@@ -6,15 +6,20 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Xml;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.example.rss_reader_android_kms.items.ItemRecyclerView;
+import com.example.rss_reader_android_kms.R;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -25,46 +30,63 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RSSReaderActivity extends AppCompatActivity {
+public class RSSReaderFragment extends Fragment {
 
-    private static final String TAG = "RSSReaderActivity";
+    private static final String KEY_LINK_RSS = "LINK_RSS";
 
     public RecyclerView mRecyclerView;
-    public EditText edtInputUrl;
-    public Button btnFetchContent;
     public SwipeRefreshLayout swipeRefreshLayout;
-    public TextView tvTitle;
-    public TextView tvDescription;
-    public TextView tvLink;
+    protected View rootView;
+    private String linkRss;
+    private List<ItemRecyclerView> listItemRecyclerView = new ArrayList<>();
 
-    private List<ModelRecyclerView> listModelRecyclerView = new ArrayList<>();
-    private String mTitle;
-    private String mLink;
-    private String mDescription;
+    public RSSReaderFragment() {
+
+    }
+
+    public static RSSReaderFragment newInstance(String link_rss) {
+        RSSReaderFragment fragment = new RSSReaderFragment();
+        Bundle args = new Bundle();
+        args.putString(KEY_LINK_RSS, link_rss);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_rssreader);
+        if (getArguments() != null) {
+            linkRss = getArguments().getString(KEY_LINK_RSS);
+        }
+    }
 
-        mRecyclerView = findViewById(R.id.recyclerView);
-        edtInputUrl = findViewById(R.id.edtInputUrl);
-        btnFetchContent = findViewById(R.id.btnFetchContent);
-        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
-        tvTitle = findViewById(R.id.tvTitle);
-        tvDescription = findViewById(R.id.tvDescription);
-        tvLink = findViewById(R.id.tvLink);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        btnFetchContent.setOnClickListener(view -> new FetchFeedTask().execute((Void) null));
+    public void initLayout() {
+        mRecyclerView = rootView.findViewById(R.id.recyclerView);
+        swipeRefreshLayout = rootView.findViewById(R.id.swipeRefreshLayout);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        new FetchFeedTask().execute((Void) null);
         swipeRefreshLayout.setOnRefreshListener(() -> new FetchFeedTask().execute((Void) null));
     }
 
-    public List<ModelRecyclerView> parseFeed(InputStream inputStream) throws XmlPullParserException, IOException {
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_rssreader, container, false);
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initLayout();
+    }
+
+    public List<ItemRecyclerView> parseFeed(InputStream inputStream) throws XmlPullParserException, IOException {
         String title = null;
         String link = null;
         String description = null;
         boolean isItem = false;
-        List<ModelRecyclerView> items = new ArrayList<>();
+        List<ItemRecyclerView> items = new ArrayList<>();
 
         try {
             XmlPullParser xmlPullParser = Xml.newPullParser();
@@ -116,12 +138,8 @@ public class RSSReaderActivity extends AppCompatActivity {
 
                 if (title != null && link != null && description != null) {
                     if (isItem) {
-                        ModelRecyclerView item = new ModelRecyclerView(title, link, description);
+                        ItemRecyclerView item = new ItemRecyclerView(title, link, description);
                         items.add(item);
-                    } else {
-                        mTitle = title;
-                        mLink = link;
-                        mDescription = description;
                     }
 
                     title = null;
@@ -139,35 +157,28 @@ public class RSSReaderActivity extends AppCompatActivity {
 
     private class FetchFeedTask extends AsyncTask<Void, Void, Boolean> {
 
-        private String urlLink;
-
         @Override
         protected void onPreExecute() {
             swipeRefreshLayout.setRefreshing(true);
-            mTitle = null;
-            mLink = null;
-            mDescription = null;
-            tvTitle.setText("Tên trang tin tức: " + mTitle);
-            tvDescription.setText("Mô tả: " + mDescription);
-            tvLink.setText("Link: " + mLink);
-            urlLink = edtInputUrl.getText().toString();
         }
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            if (TextUtils.isEmpty(urlLink))
+            if (TextUtils.isEmpty(linkRss))
                 return false;
 
             try {
-                if (!urlLink.startsWith("http://") && !urlLink.startsWith("https://"))
-                    urlLink = "http://" + urlLink;
+                if (!linkRss.startsWith("http://") && !linkRss.startsWith("https://"))
+                    linkRss = "http://" + linkRss;
 
-                URL url = new URL(urlLink);
+                URL url = new URL(linkRss);
                 InputStream inputStream = url.openConnection().getInputStream();
-                listModelRecyclerView = parseFeed(inputStream);
+                listItemRecyclerView = parseFeed(inputStream);
                 return true;
             } catch (IOException | XmlPullParserException e) {
-                Log.e(TAG, "Error", e);
+                Toast.makeText(getContext(),
+                        "Error",
+                        Toast.LENGTH_LONG).show();
             }
             return false;
         }
@@ -178,13 +189,9 @@ public class RSSReaderActivity extends AppCompatActivity {
             swipeRefreshLayout.setRefreshing(false);
 
             if (success) {
-                tvTitle.setText("Tên trang tin tức: " + mTitle);
-                tvDescription.setText("Mô tả: " + mDescription);
-                tvLink.setText("Link: " + mLink);
-                // Fill RecyclerView
-                mRecyclerView.setAdapter(new RecyclerViewAdapter(listModelRecyclerView));
+                mRecyclerView.setAdapter(new RecyclerViewAdapter(listItemRecyclerView));
             } else {
-                Toast.makeText(RSSReaderActivity.this,
+                Toast.makeText(getContext(),
                         "Enter a valid url",
                         Toast.LENGTH_LONG).show();
             }

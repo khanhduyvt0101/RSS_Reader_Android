@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.rss_reader_android_kms.modules.rssreader.ListWebNewActivity;
+import com.example.rss_reader_android_kms.modules.rssreader.RSSReaderActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -18,14 +21,14 @@ import com.google.android.gms.tasks.Task;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    GoogleSignInClient mGoogleSignInClient;
-    SignInButton signInButton;
+    private GoogleSignInClient mGoogleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        signInButton = findViewById(R.id.sign_in_button);
+        TextView tvGuest = findViewById(R.id.tvGuest);
+        SignInButton signInButton = findViewById(R.id.sign_in_button);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -34,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
         signInButton.setOnClickListener(v -> {
             Intent signInIntent = mGoogleSignInClient.getSignInIntent();
             startActivityForResult(signInIntent, 1);
+        });
+        tvGuest.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ListWebNewActivity.class);
+            startActivity(intent);
         });
     }
 

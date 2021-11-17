@@ -1,4 +1,4 @@
-package com.example.rss_reader_android_kms;
+package com.example.rss_reader_android_kms.modules.rssreader;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,12 +7,15 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.rss_reader_android_kms.items.ItemRecyclerView;
+import com.example.rss_reader_android_kms.R;
+
 import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.FeedModelViewHolder> {
-    private List<ModelRecyclerView> mRssFeedModels;
+    private List<ItemRecyclerView> mRssFeedModels;
 
-    public RecyclerViewAdapter(List<ModelRecyclerView> rssFeedModels) {
+    public RecyclerViewAdapter(List<ItemRecyclerView> rssFeedModels) {
         mRssFeedModels = rssFeedModels;
     }
 
@@ -25,10 +28,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(FeedModelViewHolder holder, int position) {
-        final ModelRecyclerView modelRecyclerView = mRssFeedModels.get(position);
-        ((TextView) holder.rssFeedView.findViewById(R.id.titleText)).setText(modelRecyclerView.title);
-        ((TextView) holder.rssFeedView.findViewById(R.id.descriptionText)).setText(modelRecyclerView.description);
-        ((TextView) holder.rssFeedView.findViewById(R.id.linkText)).setText("Links: " + modelRecyclerView.link);
+        final ItemRecyclerView itemRecyclerView = mRssFeedModels.get(position);
+        ((TextView) holder.rssFeedView.findViewById(R.id.titleText)).setText(itemRecyclerView.title);
+        ((TextView) holder.rssFeedView.findViewById(R.id.descriptionText)).setText(itemRecyclerView.description);
+        ((TextView) holder.rssFeedView.findViewById(R.id.linkText)).setText("Links: " + itemRecyclerView.link);
     }
 
     @Override

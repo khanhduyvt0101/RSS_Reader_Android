@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#2AAEB7</color>
+    <color name="color_2">#FFFFFF</color>
+    <color name="neutral_1">#444345</color>
+    <color name="neutral_2">#7C7B7C</color>
+    <color name="neutral_3">#BABABA</color>
+    <color name="neutral_4">#DFDFDF</color>
+    <color name="neutral_5">#F1F3F6</color>
+    <color name="color_6">#8E8E93</color>
+    <color name="solid_pressed">#1C8F97</color>
+    <color name="line_pressed">#0D2AAEB7</color>
+    <color name="transparent">#00000000</color>
+    <color name="waiting">#FFB420</color>
+    <color name="ready">#44CF6C</color>
+    <color name="expired">#7D7AE4</color>
+    <color name="rejected">#FF6B6B</color>
+    <color name="requested">#35B4AD</color>
+    <color name="disable_button">#B5E3E6</color>
+</resources>

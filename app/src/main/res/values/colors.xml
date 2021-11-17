@@ -7,4 +7,58 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+
+    <color name="colorPrimary">@color/primary</color>
+    <color name="colorPrimaryDark">@color/primary</color>
+    <color name="colorAccent">@color/primary</color>
+    <color name="windowBackground">@color/color_2</color>
+    <color name="background">@color/neutral_5</color>
+
+    <color name="text_action_button_positive">@color/color_2</color>
+    <color name="text_action_button_negative">@color/neutral_1</color>
+    <color name="button_positive_background_pressed">@color/solid_pressed</color>
+    <color name="button_negative_background_pressed">@color/line_pressed</color>
+    <color name="stroke">@color/neutral_4</color>
+
+    <color name="progress_feeling_seekbar_color">@color/neutral_4</color>
+    <color name="text_feeling_color">@color/neutral_1</color>
+    <color name="text_headline_color">@color/neutral_1</color>
+    <color name="text_body_color">@color/neutral_2</color>
+
+    <color name="text_checkbox_radiobutton">@color/transparent</color>
+    <color name="checkbox_background">@color/color_2</color>
+    <color name="checkbox_background_pressed">@color/neutral_3</color>
+
+    <!--    Left menu navigation-->
+    <color name="menu_line_color">@color/neutral_4</color>
+    <color name="menu_item_color">@color/neutral_1</color>
+    <color name="menu_item_selected_color">@color/requested</color>
+    <color name="menu_item_logout_color">@color/rejected</color>
+
+    <!--    About-->
+    <color name="about_vision_color">@color/neutral_1</color>
+    <color name="about_line_color">@color/neutral_4</color>
+
+    <!--    Login-->
+    <color name="text_login_welcome">#727374</color>
+
+    <!-- Home -->
+    <color name="home_background">@color/neutral_5</color>
+    <color name="pulse_item_status_waiting">@color/waiting</color>
+    <color name="pulse_item_status_running">@color/ready</color>
+    <color name="pulse_item_status_closed">@color/expired</color>
+    <color name="status_explain">@color/neutral_3</color>
+    <color name="title_color">@color/neutral_1</color>
+    <color name="reject_color">@color/rejected</color>
+    <color name="reject_color_pressed">#EF4C4B</color>
+
+    <!-- Question -->
+    <color name="color_button_when_required">@color/disable_button</color>
+
+    <!-- Review Img -->
+    <color name="image_button_tint_color">@color/neutral_1</color>
+
+    <!-- Reaction -->
+    <color name="default_icon_tint">@color/neutral_3</color>
 </resources>

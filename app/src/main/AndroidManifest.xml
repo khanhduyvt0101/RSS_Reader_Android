@@ -12,7 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RSS_reader_android_kms">
         <activity
-            android:name=".RSSReaderActivity"
+            android:name=".modules.rssreader.ListWebNewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".modules.rssreader.RSSReaderActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
