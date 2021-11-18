@@ -1,33 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/normal_padding"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="@dimen/normal_padding">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Danh sách các trang báo hiện có"
         android:textAlignment="center"
-        android:textSize="@dimen/headline_1_text_size"/>
+        android:textSize="@dimen/headline_1_text_size" />
 
     <TextView
         android:id="@+id/tvVnExpress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/normal_padding"
-        android:background="@drawable/custom_rounded_border_web_news"
         android:layout_marginVertical="@dimen/normal_padding"
-        android:text="VnExpress"/>
+        android:background="@drawable/custom_rounded_border_web_news"
+        android:padding="@dimen/normal_padding"
+        android:text="VnExpress" />
 
     <TextView
         android:id="@+id/tvTinhTe"
         android:layout_width="wrap_content"
-        android:padding="@dimen/normal_padding"
         android:layout_height="wrap_content"
         android:background="@drawable/custom_rounded_border_web_news"
-        android:text="TinhTe"/>
+        android:padding="@dimen/normal_padding"
+        android:text="TinhTe" />
 
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/large_padding"
+        android:layout_marginBottom="@dimen/normal_padding"
+        android:text="Danh sách các tin đã lưu vào xem sau"
+        android:textAlignment="center"
+        android:textSize="@dimen/headline_1_text_size" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcvListSeeLater"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

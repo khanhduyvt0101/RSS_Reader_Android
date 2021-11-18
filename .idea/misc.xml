@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/bg_button_home.xml" value="0.23703703703703705" />
+        <entry key="app/src/main/res/drawable/card_item_rss.xml" value="0.23703703703703705" />
         <entry key="app/src/main/res/drawable/custom_rounded_border_web_news.xml" value="0.22037037037037038" />
         <entry key="app/src/main/res/drawable/custom_rounded_tab_menu.xml" value="0.18055555555555555" />
         <entry key="app/src/main/res/layout/activity_list_web_new.xml" value="0.25" />

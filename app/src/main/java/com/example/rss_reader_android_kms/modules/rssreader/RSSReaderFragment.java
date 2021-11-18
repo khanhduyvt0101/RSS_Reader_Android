@@ -1,10 +1,11 @@
 package com.example.rss_reader_android_kms.modules.rssreader;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.rss_reader_android_kms.items.ItemRecyclerView;
 import com.example.rss_reader_android_kms.R;
+import com.example.rss_reader_android_kms.items.ItemRecyclerView;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -39,6 +40,8 @@ public class RSSReaderFragment extends Fragment {
     protected View rootView;
     private String linkRss;
     private List<ItemRecyclerView> listItemRecyclerView = new ArrayList<>();
+    private RSSReaderActivity rssReaderActivity;
+    private RecyclerViewAdapter recyclerViewAdapter;
 
     public RSSReaderFragment() {
 
@@ -61,7 +64,7 @@ public class RSSReaderFragment extends Fragment {
     }
 
     public void initLayout() {
-        mRecyclerView = rootView.findViewById(R.id.recyclerView);
+        mRecyclerView = rootView.findViewById(R.id.rcvListRSS);
         swipeRefreshLayout = rootView.findViewById(R.id.swipeRefreshLayout);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         new FetchFeedTask().execute((Void) null);
@@ -72,6 +75,7 @@ public class RSSReaderFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_rssreader, container, false);
+        rssReaderActivity = (RSSReaderActivity) getActivity();
         return rootView;
     }
 
@@ -83,6 +87,7 @@ public class RSSReaderFragment extends Fragment {
 
     public List<ItemRecyclerView> parseFeed(InputStream inputStream) throws XmlPullParserException, IOException {
         String title = null;
+        String image = null;
         String link = null;
         String description = null;
         boolean isItem = false;
@@ -115,7 +120,6 @@ public class RSSReaderFragment extends Fragment {
                     }
                 }
 
-                Log.d("MainActivity", "Parsing name ==> " + name);
                 String result = "";
                 if (xmlPullParser.next() == XmlPullParser.TEXT) {
                     result = xmlPullParser.getText();
@@ -125,23 +129,33 @@ public class RSSReaderFragment extends Fragment {
                 if (name.equalsIgnoreCase("title")) {
                     title = result;
                 } else if (name.equalsIgnoreCase("link")) {
-                    link = result;
+                    if (!result.equals(linkRss)) {
+                        link = result;
+                    }
                 } else if (name.equalsIgnoreCase("description")) {
-                    int temp = 0;
-                    for (int i = 0; i < result.length(); i++) {
-                        if (result.charAt(i) == '>') {
-                            temp = i;
+                    if (result.contains("img src=")) {
+                        image = result.substring(result.indexOf("src=") + 5, result.indexOf("></a>") - 2);
+                    }
+                    if (!result.equals("Trang chủ")) {
+                        int temp = 0;
+                        for (int i = 0; i < result.length(); i++) {
+                            if (result.charAt(i) == '>') {
+                                temp = i;
+                            }
+                        }
+                        if (result.contains("></a></br>")) {
+                            description = result.substring(temp + 1);
+                        } else {
+                            description = result.substring(temp);
                         }
                     }
-                    description = result.substring(temp + 1);
                 }
 
                 if (title != null && link != null && description != null) {
                     if (isItem) {
-                        ItemRecyclerView item = new ItemRecyclerView(title, link, description);
+                        ItemRecyclerView item = new ItemRecyclerView(title, link, image, description);
                         items.add(item);
                     }
-
                     title = null;
                     link = null;
                     description = null;
@@ -189,7 +203,32 @@ public class RSSReaderFragment extends Fragment {
             swipeRefreshLayout.setRefreshing(false);
 
             if (success) {
-                mRecyclerView.setAdapter(new RecyclerViewAdapter(listItemRecyclerView));
+                recyclerViewAdapter = new RecyclerViewAdapter(listItemRecyclerView);
+                if (!RSSReaderActivity.listNewsLater.isEmpty()) {
+                    for (int i = 0; i < listItemRecyclerView.size(); i++) {
+                        for (int j = 0; j < RSSReaderActivity.listNewsLater.size(); j++) {
+                            if (RSSReaderActivity.listNewsLater.get(j).getTitle().equals(
+                                    listItemRecyclerView.get(i).getTitle()
+                            )) {
+                                listItemRecyclerView.get(i).setShowSeeLater(false);
+                            }
+                        }
+                    }
+                }
+                mRecyclerView.setAdapter(recyclerViewAdapter);
+                recyclerViewAdapter.setListener((action, item, view, position) -> {
+                    if (action == 1) {
+                        if (item != null) {
+                            rssReaderActivity.addListSeeLater(item);
+                            item.setShowSeeLater(false);
+                            recyclerViewAdapter.notifyDataSetChanged();
+                        }
+                    }
+                    if (action == 2) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.getLink()));
+                        startActivity(browserIntent);
+                    }
+                });
             } else {
                 Toast.makeText(getContext(),
                         "Enter a valid url",
