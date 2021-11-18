@@ -27,8 +27,8 @@
             android:layout_marginStart="5dp"
             android:background="@drawable/custom_rounded_border_web_news"
             android:padding="5dp"
-            android:text="See later"
-            android:textSize="10sp" />
+            android:text="@string/see_later"
+            android:textSize="@dimen/body_1_text_size" />
 
     </LinearLayout>
 
@@ -45,10 +45,5 @@
         android:layout_height="wrap_content"
         android:layout_marginVertical="5dp"
         android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/linkText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
 </LinearLayout>

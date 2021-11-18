@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
-    private List<String> listLinkRSS;
+    private final List<String> listLinkRSS;
 
     public ViewPagerAdapter(@NonNull FragmentManager fm, int behavior, List<String> listLinkRSS) {
         super(fm, behavior);

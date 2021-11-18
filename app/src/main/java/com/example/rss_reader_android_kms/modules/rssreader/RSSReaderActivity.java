@@ -3,7 +3,6 @@ package com.example.rss_reader_android_kms.modules.rssreader;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,7 +21,6 @@ public class RSSReaderActivity extends AppCompatActivity {
     public static final String VNEXPRESS = "https://vnexpress.net/";
     public static final String TINHTE = "https://tinhte.vn/";
 
-    private static final String TAG = "RSSReaderActivity";
     public static List<ItemRecyclerView> listNewsLater = new ArrayList<>();
     private final List<String> listRss = new ArrayList<>();
     private String webNews;
@@ -34,7 +32,7 @@ public class RSSReaderActivity extends AppCompatActivity {
         ViewPager viewPager = findViewById(R.id.viewPager);
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         TextView tvHome = findViewById(R.id.tvHome);
-        webNews = getIntent().getStringExtra(ListWebNewActivity.KEY_WEBNEWS);
+        webNews = getIntent().getStringExtra(ListWebNewActivity.KEY_URL);
         setupMenuBarAndListRSS();
         tvHome.setOnClickListener(v -> {
             Intent intent = new Intent(this, ListWebNewActivity.class);

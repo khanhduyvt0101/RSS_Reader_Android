@@ -1,10 +1,10 @@
 package com.example.rss_reader_android_kms.modules.rssreader;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Xml;
 import android.view.LayoutInflater;
@@ -30,6 +30,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class RSSReaderFragment extends Fragment {
 
@@ -67,8 +69,62 @@ public class RSSReaderFragment extends Fragment {
         mRecyclerView = rootView.findViewById(R.id.rcvListRSS);
         swipeRefreshLayout = rootView.findViewById(R.id.swipeRefreshLayout);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        new FetchFeedTask().execute((Void) null);
-        swipeRefreshLayout.setOnRefreshListener(() -> new FetchFeedTask().execute((Void) null));
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            setupAdapter();
+            swipeRefreshLayout.setRefreshing(false);
+        });
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+        executor.execute(() -> {
+            fetchDataToXml();
+            handler.post(this::setupAdapter);
+        });
+    }
+
+    private void fetchDataToXml() {
+        if (!TextUtils.isEmpty(linkRss)) {
+            try {
+                if (!linkRss.startsWith("http://") && !linkRss.startsWith("https://"))
+                    linkRss = "http://" + linkRss;
+
+                URL url = new URL(linkRss);
+                InputStream inputStream = url.openConnection().getInputStream();
+                listItemRecyclerView = parseFeed(inputStream);
+            } catch (IOException | XmlPullParserException e) {
+                Toast.makeText(getContext(),
+                        "Error",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void setupAdapter() {
+        recyclerViewAdapter = new RecyclerViewAdapter(listItemRecyclerView);
+        if (!RSSReaderActivity.listNewsLater.isEmpty()) {
+            for (int i = 0; i < listItemRecyclerView.size(); i++) {
+                for (int j = 0; j < RSSReaderActivity.listNewsLater.size(); j++) {
+                    if (RSSReaderActivity.listNewsLater.get(j).getTitle().equals(
+                            listItemRecyclerView.get(i).getTitle()
+                    )) {
+                        listItemRecyclerView.get(i).setShowSeeLater(false);
+                    }
+                }
+            }
+        }
+        mRecyclerView.setAdapter(recyclerViewAdapter);
+        recyclerViewAdapter.setListener((action, item, view, position) -> {
+            if (action == 1) {
+                if (item != null) {
+                    rssReaderActivity.addListSeeLater(item);
+                    item.setShowSeeLater(false);
+                    recyclerViewAdapter.notifyDataSetChanged();
+                }
+            }
+            if (action == 2) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.getLink()));
+                startActivity(browserIntent);
+            }
+        });
     }
 
     @Override
@@ -86,153 +142,88 @@ public class RSSReaderFragment extends Fragment {
     }
 
     public List<ItemRecyclerView> parseFeed(InputStream inputStream) throws XmlPullParserException, IOException {
-        String title = null;
-        String image = null;
-        String link = null;
-        String description = null;
-        boolean isItem = false;
+
         List<ItemRecyclerView> items = new ArrayList<>();
 
         try {
             XmlPullParser xmlPullParser = Xml.newPullParser();
             xmlPullParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             xmlPullParser.setInput(inputStream, null);
-
             xmlPullParser.nextTag();
-            while (xmlPullParser.next() != XmlPullParser.END_DOCUMENT) {
-                int eventType = xmlPullParser.getEventType();
-
-                String name = xmlPullParser.getName();
-                if (name == null)
-                    continue;
-
-                if (eventType == XmlPullParser.END_TAG) {
-                    if (name.equalsIgnoreCase("item")) {
-                        isItem = false;
-                    }
-                    continue;
-                }
-
-                if (eventType == XmlPullParser.START_TAG) {
-                    if (name.equalsIgnoreCase("item")) {
-                        isItem = true;
-                        continue;
-                    }
-                }
-
-                String result = "";
-                if (xmlPullParser.next() == XmlPullParser.TEXT) {
-                    result = xmlPullParser.getText();
-                    xmlPullParser.nextTag();
-                }
-
-                if (name.equalsIgnoreCase("title")) {
-                    title = result;
-                } else if (name.equalsIgnoreCase("link")) {
-                    if (!result.equals(linkRss)) {
-                        link = result;
-                    }
-                } else if (name.equalsIgnoreCase("description")) {
-                    if (result.contains("img src=")) {
-                        image = result.substring(result.indexOf("src=") + 5, result.indexOf("></a>") - 2);
-                    }
-                    if (!result.equals("Trang chủ")) {
-                        int temp = 0;
-                        for (int i = 0; i < result.length(); i++) {
-                            if (result.charAt(i) == '>') {
-                                temp = i;
-                            }
-                        }
-                        if (result.contains("></a></br>")) {
-                            description = result.substring(temp + 1);
-                        } else {
-                            description = result.substring(temp);
-                        }
-                    }
-                }
-
-                if (title != null && link != null && description != null) {
-                    if (isItem) {
-                        ItemRecyclerView item = new ItemRecyclerView(title, link, image, description);
-                        items.add(item);
-                    }
-                    title = null;
-                    link = null;
-                    description = null;
-                    isItem = false;
-                }
-            }
-
+            mapXmlToItem(xmlPullParser, items);
             return items;
         } finally {
             inputStream.close();
         }
     }
 
-    private class FetchFeedTask extends AsyncTask<Void, Void, Boolean> {
+    private void mapXmlToItem(XmlPullParser xmlPullParser, List<ItemRecyclerView> items) throws IOException, XmlPullParserException {
+        String title = null;
+        String image = null;
+        String link = null;
+        String description = null;
+        boolean isItem = false;
+        while (xmlPullParser.next() != XmlPullParser.END_DOCUMENT) {
+            int eventType = xmlPullParser.getEventType();
 
-        @Override
-        protected void onPreExecute() {
-            swipeRefreshLayout.setRefreshing(true);
-        }
+            String name = xmlPullParser.getName();
+            if (name == null)
+                continue;
 
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-            if (TextUtils.isEmpty(linkRss))
-                return false;
-
-            try {
-                if (!linkRss.startsWith("http://") && !linkRss.startsWith("https://"))
-                    linkRss = "http://" + linkRss;
-
-                URL url = new URL(linkRss);
-                InputStream inputStream = url.openConnection().getInputStream();
-                listItemRecyclerView = parseFeed(inputStream);
-                return true;
-            } catch (IOException | XmlPullParserException e) {
-                Toast.makeText(getContext(),
-                        "Error",
-                        Toast.LENGTH_LONG).show();
+            if (eventType == XmlPullParser.END_TAG) {
+                if (name.equalsIgnoreCase("item")) {
+                    isItem = false;
+                }
+                continue;
             }
-            return false;
-        }
 
-        @SuppressLint("SetTextI18n")
-        @Override
-        protected void onPostExecute(Boolean success) {
-            swipeRefreshLayout.setRefreshing(false);
+            if (eventType == XmlPullParser.START_TAG) {
+                if (name.equalsIgnoreCase("item")) {
+                    isItem = true;
+                    continue;
+                }
+            }
 
-            if (success) {
-                recyclerViewAdapter = new RecyclerViewAdapter(listItemRecyclerView);
-                if (!RSSReaderActivity.listNewsLater.isEmpty()) {
-                    for (int i = 0; i < listItemRecyclerView.size(); i++) {
-                        for (int j = 0; j < RSSReaderActivity.listNewsLater.size(); j++) {
-                            if (RSSReaderActivity.listNewsLater.get(j).getTitle().equals(
-                                    listItemRecyclerView.get(i).getTitle()
-                            )) {
-                                listItemRecyclerView.get(i).setShowSeeLater(false);
-                            }
+            String result = "";
+            if (xmlPullParser.next() == XmlPullParser.TEXT) {
+                result = xmlPullParser.getText();
+                xmlPullParser.nextTag();
+            }
+
+            if (name.equalsIgnoreCase("title")) {
+                title = result;
+            } else if (name.equalsIgnoreCase("link")) {
+                if (!result.equals(linkRss)) {
+                    link = result;
+                }
+            } else if (name.equalsIgnoreCase("description")) {
+                if (result.contains("img src=")) {
+                    image = result.substring(result.indexOf("src=") + 5, result.indexOf("></a>") - 2);
+                }
+                if (!result.equals("Trang chủ")) {
+                    int temp = 0;
+                    for (int i = 0; i < result.length(); i++) {
+                        if (result.charAt(i) == '>') {
+                            temp = i;
                         }
+                    }
+                    if (result.contains("></a></br>")) {
+                        description = result.substring(temp + 1);
+                    } else {
+                        description = result.substring(temp);
                     }
                 }
-                mRecyclerView.setAdapter(recyclerViewAdapter);
-                recyclerViewAdapter.setListener((action, item, view, position) -> {
-                    if (action == 1) {
-                        if (item != null) {
-                            rssReaderActivity.addListSeeLater(item);
-                            item.setShowSeeLater(false);
-                            recyclerViewAdapter.notifyDataSetChanged();
-                        }
-                    }
-                    if (action == 2) {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.getLink()));
-                        startActivity(browserIntent);
-                    }
-                });
-            } else {
-                Toast.makeText(getContext(),
-                        "Enter a valid url",
-                        Toast.LENGTH_LONG).show();
+            }
+
+            if (title != null && link != null && description != null) {
+                if (isItem) {
+                    ItemRecyclerView item = new ItemRecyclerView(title, link, image, description);
+                    items.add(item);
+                }
+                title = null;
+                link = null;
+                description = null;
+                isItem = false;
             }
         }
     }

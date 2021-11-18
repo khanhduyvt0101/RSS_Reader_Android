@@ -13,7 +13,7 @@ import com.example.rss_reader_android_kms.R;
 
 public class ListWebNewActivity extends AppCompatActivity {
 
-    public static final String KEY_WEBNEWS = "KEY_WEBNEWS";
+    public static final String KEY_URL = "KEY_URL";
     public static final int REQUEST_CODE = 1;
     public RecyclerView mRecyclerView;
 
@@ -28,12 +28,12 @@ public class ListWebNewActivity extends AppCompatActivity {
 
         tvVnExpress.setOnClickListener(v -> {
             Intent intent = new Intent(this, RSSReaderActivity.class);
-            intent.putExtra(KEY_WEBNEWS, RSSReaderActivity.VNEXPRESS);
+            intent.putExtra(KEY_URL, RSSReaderActivity.VNEXPRESS);
             startActivityForResult(intent, REQUEST_CODE);
         });
         tvTinhTe.setOnClickListener(v -> {
             Intent intent = new Intent(this, RSSReaderActivity.class);
-            intent.putExtra(KEY_WEBNEWS, RSSReaderActivity.TINHTE);
+            intent.putExtra(KEY_URL, RSSReaderActivity.TINHTE);
             startActivityForResult(intent, REQUEST_CODE);
         });
     }

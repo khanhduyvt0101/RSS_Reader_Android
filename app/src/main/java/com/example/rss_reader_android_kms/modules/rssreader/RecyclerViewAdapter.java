@@ -1,5 +1,6 @@
 package com.example.rss_reader_android_kms.modules.rssreader;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return feedModelViewHolder;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(FeedModelViewHolder holder, int position) {
         final ItemRecyclerView itemRecyclerView = mRssFeedModels.get(position);
@@ -45,7 +47,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
         ((TextView) holder.rssFeedView.findViewById(R.id.titleText)).setText(itemRecyclerView.getTitle());
         ((TextView) holder.rssFeedView.findViewById(R.id.descriptionText)).setText(itemRecyclerView.getDescription());
-        ((TextView) holder.rssFeedView.findViewById(R.id.linkText)).setText("Links: " + itemRecyclerView.getLink());
         if (itemRecyclerView.getLinkImage() != null && !itemRecyclerView.getLinkImage().isEmpty()) {
             holder.rssFeedView.findViewById(R.id.imageView).setVisibility(View.VISIBLE);
             Glide.with(holder.getView())
@@ -74,12 +75,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             rssFeedView = v;
             TextView tvSeeLater = v.findViewById(R.id.tvSeeLater);
             TextView tvTitle = v.findViewById(R.id.titleText);
-            tvTitle.setOnClickListener(v12 -> {
-                invokeAction(2);
-            });
-            tvSeeLater.setOnClickListener(v1 -> {
-                invokeAction(1);
-            });
+            tvTitle.setOnClickListener(v12 -> invokeAction(2));
+            tvSeeLater.setOnClickListener(v1 -> invokeAction(1));
         }
 
         public void bindData(ItemRecyclerView data, int position) {
