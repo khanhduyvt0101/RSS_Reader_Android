@@ -47,6 +47,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
         ((TextView) holder.rssFeedView.findViewById(R.id.titleText)).setText(itemRecyclerView.getTitle());
         ((TextView) holder.rssFeedView.findViewById(R.id.descriptionText)).setText(itemRecyclerView.getDescription());
+
         if (itemRecyclerView.getLinkImage() != null && !itemRecyclerView.getLinkImage().isEmpty()) {
             holder.rssFeedView.findViewById(R.id.imageView).setVisibility(View.VISIBLE);
             Glide.with(holder.getView())
@@ -74,8 +75,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             super(v);
             rssFeedView = v;
             TextView tvSeeLater = v.findViewById(R.id.tvSeeLater);
-            TextView tvTitle = v.findViewById(R.id.titleText);
-            tvTitle.setOnClickListener(v12 -> invokeAction(2));
+            TextView tvViewDetails = v.findViewById(R.id.tvViewDetails);
+            tvViewDetails.setOnClickListener(v12 -> invokeAction(2));
             tvSeeLater.setOnClickListener(v1 -> invokeAction(1));
         }
 

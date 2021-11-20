@@ -46,4 +46,14 @@
         android:layout_marginVertical="5dp"
         android:textSize="18sp" />
 
+    <TextView
+        android:id="@+id/tvViewDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorAccent"
+        android:text="@string/view_details"
+        android:padding="5dp"
+        android:background="@drawable/custom_rounded_border_web_news"
+        android:textSize="18sp" />
+
 </LinearLayout>
