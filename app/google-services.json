@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "288417750062",
+    "project_id": "kms-test-1637076153188",
+    "storage_bucket": "kms-test-1637076153188.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:288417750062:android:9ee783a1db5331a210d3bf",
+        "android_client_info": {
+          "package_name": "com.example.rss_reader_android_kms"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "288417750062-0guenfrjkavtqcm4r2sdb4gf98envjeg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC41DAbthqUImIr2YdbQYqRV47emj76e8k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "288417750062-0guenfrjkavtqcm4r2sdb4gf98envjeg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

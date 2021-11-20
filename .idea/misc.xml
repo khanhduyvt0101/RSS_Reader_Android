@@ -8,7 +8,10 @@
         <entry key="app/src/main/res/drawable/custom_rounded_border_web_news.xml" value="0.22037037037037038" />
         <entry key="app/src/main/res/drawable/custom_rounded_tab_menu.xml" value="0.18055555555555555" />
         <entry key="app/src/main/res/layout/activity_list_web_new.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.18297101449275363" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_register.xml" value="0.18297101449275363" />
+        <entry key="app/src/main/res/layout/activity_register_avtivity.xml" value="0.18297101449275363" />
         <entry key="app/src/main/res/layout/activity_rssreader.xml" value="0.26222826086956524" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.2028985507246377" />
         <entry key="app/src/main/res/layout/fragment_rssreader.xml" value="0.23052536231884058" />
