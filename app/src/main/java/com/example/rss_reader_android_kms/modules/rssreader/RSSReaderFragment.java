@@ -6,11 +6,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +28,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -88,12 +89,12 @@ public class RSSReaderFragment extends Fragment {
                     linkRss = "http://" + linkRss;
 
                 URL url = new URL(linkRss);
-                InputStream inputStream = url.openConnection().getInputStream();
+                URLConnection con = url.openConnection();
+                con.addRequestProperty("User-Agent", "firefox");
+                InputStream inputStream = con.getInputStream();
                 listItemRecyclerView = parseFeed(inputStream);
             } catch (IOException | XmlPullParserException e) {
-                Toast.makeText(getContext(),
-                        "Error",
-                        Toast.LENGTH_LONG).show();
+                Log.d("ERROR", e.getMessage());
             }
         }
     }
@@ -162,6 +163,8 @@ public class RSSReaderFragment extends Fragment {
         String image = null;
         String link = null;
         String description = null;
+        boolean firstLink = false;
+        boolean firstDescription = false;
         boolean isItem = false;
         while (xmlPullParser.next() != XmlPullParser.END_DOCUMENT) {
             int eventType = xmlPullParser.getEventType();
@@ -191,27 +194,21 @@ public class RSSReaderFragment extends Fragment {
             }
 
             if (name.equalsIgnoreCase("title")) {
-                title = result;
+                title = result.trim();
             } else if (name.equalsIgnoreCase("link")) {
-                if (!result.equals(linkRss)) {
-                    link = result;
+                if (!firstLink) {
+                    firstLink = true;
+                } else {
+                    if (!result.equals(linkRss)) {
+                        link = result.trim();
+                    }
                 }
             } else if (name.equalsIgnoreCase("description")) {
-                if (result.contains("img src=")) {
-                    image = result.substring(result.indexOf("src=") + 5, result.indexOf("></a>") - 2);
-                }
-                if (!result.equals("Trang chủ")) {
-                    int temp = 0;
-                    for (int i = 0; i < result.length(); i++) {
-                        if (result.charAt(i) == '>') {
-                            temp = i;
-                        }
-                    }
-                    if (result.contains("></a></br>")) {
-                        description = result.substring(temp + 1);
-                    } else {
-                        description = result.substring(temp);
-                    }
+                if (!firstDescription) {
+                    firstDescription = true;
+                } else {
+                    image = parserLink(result);
+                    description = parserDescription(result);
                 }
             }
 
@@ -227,4 +224,42 @@ public class RSSReaderFragment extends Fragment {
             }
         }
     }
+
+    private String parserDescription(String result) {
+        String desc;
+        if (!result.contains("cafebiz.vn")) {
+            int temp = 0;
+            for (int i = 0; i < result.length(); i++) {
+                if (result.charAt(i) == '>') {
+                    temp = i;
+                }
+            }
+            if (result.contains("></a></br>")) {
+                desc = result.substring(temp + 1).trim();
+            } else {
+                desc = result.substring(temp).trim();
+            }
+        } else {
+            desc = result.substring(result.indexOf("<span>") + 6, result.indexOf("</span>")).trim();
+        }
+        return desc;
+    }
+
+    private String parserLink(String result) {
+        String image = "";
+        if (!result.contains("cafebiz.vn")) {
+            if (result.contains("img src=")) {
+                image = result.substring(result.indexOf("src=") + 5, result.indexOf("></a>") - 2).trim();
+            }
+        } else {
+            if (result.contains(".jpg")) {
+                image = result.substring(result.indexOf("src=") + 5, result.indexOf(".jpg") + 4).trim();
+            }
+            if (result.contains(".jpeg")) {
+                image = result.substring(result.indexOf("src=") + 5, result.indexOf(".jpeg") + 5).trim();
+            }
+        }
+        return image;
+    }
 }
+

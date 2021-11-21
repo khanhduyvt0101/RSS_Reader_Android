@@ -26,6 +26,7 @@ public class ListWebNewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_web_new);
         TextView tvVnExpress = findViewById(R.id.tvVnExpress);
         TextView tvTinhTe = findViewById(R.id.tvTinhTe);
+        TextView tvCafeBiz = findViewById(R.id.tvCafebiz);
         mRecyclerView = findViewById(R.id.rcvListSeeLater);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -39,7 +40,11 @@ public class ListWebNewActivity extends AppCompatActivity {
             intent.putExtra(KEY_URL, RSSReaderActivity.TINHTE);
             startActivityForResult(intent, REQUEST_CODE);
         });
-
+        tvCafeBiz.setOnClickListener(v -> {
+            Intent intent = new Intent(this, RSSReaderActivity.class);
+            intent.putExtra(KEY_URL, RSSReaderActivity.CAFEBIZ);
+            startActivityForResult(intent, REQUEST_CODE);
+        });
 
     }
 

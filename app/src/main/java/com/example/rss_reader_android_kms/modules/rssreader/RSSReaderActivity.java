@@ -18,8 +18,9 @@ import java.util.List;
 
 public class RSSReaderActivity extends AppCompatActivity {
 
-    public static final String VNEXPRESS = "https://vnexpress.net/";
-    public static final String TINHTE = "https://tinhte.vn/";
+    public static final String VNEXPRESS = "https://vnexpress.net";
+    public static final String TINHTE = "https://tinhte.vn";
+    public static final String CAFEBIZ = "https://cafebiz.vn";
 
     public static List<ItemRecyclerView> listNewsLater = new ArrayList<>();
     private final List<String> listRss = new ArrayList<>();
@@ -46,16 +47,25 @@ public class RSSReaderActivity extends AppCompatActivity {
     }
 
     private void setupMenuBarAndListRSS() {
-        if (webNews.equals(VNEXPRESS)) {
-            listRss.add("https://vnexpress.net/rss/tin-moi-nhat.rss");
-            listRss.add("https://vnexpress.net/rss/the-gioi.rss");
-            listRss.add("https://vnexpress.net/rss/thoi-su.rss");
-            listRss.add("https://vnexpress.net/rss/kinh-doanh.rss");
-            listRss.add("https://vnexpress.net/rss/startup.rss");
+        switch (webNews){
+            case VNEXPRESS:
+                listRss.add("https://vnexpress.net/rss/tin-moi-nhat.rss");
+                listRss.add("https://vnexpress.net/rss/the-gioi.rss");
+                listRss.add("https://vnexpress.net/rss/thoi-su.rss");
+                listRss.add("https://vnexpress.net/rss/kinh-doanh.rss");
+                listRss.add("https://vnexpress.net/rss/startup.rss");
+                break;
+            case TINHTE:
+                listRss.add("https://tinhte.vn/rss");
+                break;
+            case CAFEBIZ:
+                listRss.add("https://cafebiz.vn/trang-chu.rss");
+                listRss.add("https://cafebiz.vn/cong-nghe.rss");
+                listRss.add("https://cafebiz.vn/tin-tuc.rss");
+                listRss.add("https://cafebiz.vn/cau-chuyen-kinh-doanh.rss");
+                listRss.add("https://cafebiz.vn/startup.rss");
         }
-        if (webNews.equals(TINHTE)) {
-            listRss.add("https://tinhte.vn/rss");
-        }
+
     }
 
     public void addListSeeLater(ItemRecyclerView itemRecyclerView) {

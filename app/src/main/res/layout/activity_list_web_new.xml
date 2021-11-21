@@ -29,6 +29,15 @@
         android:padding="@dimen/normal_padding"
         android:text="TinhTe" />
 
+    <TextView
+        android:id="@+id/tvCafebiz"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_rounded_border_web_news"
+        android:padding="@dimen/normal_padding"
+        android:layout_marginVertical="@dimen/normal_padding"
+        android:text="CafeBiz" />
+
 
     <TextView
         android:layout_width="match_parent"
