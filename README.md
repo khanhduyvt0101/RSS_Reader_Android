@@ -1,4 +1,4 @@
-# RSS_Reader_Android_KMS_Test
+# RSS_Reader_Android
 
 ## Ngôn ngữ: Java Andoid
 
