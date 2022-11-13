@@ -1,6 +1,6 @@
 # RSS_Reader_Android
 
-## Ngôn ngữ: Java Andoid
+## Language: Java Andoid
 
 ## Environment: 
 - minSdk: 30
@@ -12,13 +12,16 @@
 - GG API
 
 ## Flow
-### Đăng nhập, đăng kí
-- User đăng kí tài khoản để đăng nhập vào app. Sau khi đăng kí tài khoản thì user sẽ vào được trong app. 
-- User đã có tài khoản đăng kí có thể điền tài khoản và mật khẩu đã đăng kí và nhấn login.
-- User có thể nhấn SignIn with Google để đăng nhập. Không cần phải đăng kí.
+### Login, register
+- User registers an account to log in to the app. After registering an account, the user will be able to access the app.
+- Users who already have a registered account can enter their registered account and password and click login.
+- User can click SignIn with Google to sign in without register.
 
 ### Read RSS
-- Sau khi đăng nhập User chọn trang báo ốn đọc. Phía dưới danh sách trang báo là danh sách xem sau. User phải vào các trang báo và ấn xem sau thì danh sách này mới hiện thị, ban đầu sẽ trống.
-- User sau khi chọn trang báo sẽ vào màn hình đọc RSS. User muốn xem chi tiết thì nhấn vào nút View Details. User muốn xem sau thì nhấn nút see later. 
-- User nhấn vào nút home để về lại màn hình danh sách xem sau và danh sách các trang báo.
-- User có thể vuốt trái phải để chuyển các chủ đề RSS, hoặc có thể nhấn vào tab phía trên màn hình để chuyển.
+- After logging in, User selects the page to read. Below the list of newspaper pages is the following list. The user must go to the newspaper pages and press view later for this list to appear, initially it will be empty.
+- After selecting the newspaper page, the user will enter the RSS reader screen. The user wants to see the details, then click the View Details button. Users want to see later, press the see later button.
+- The user presses the home button to return to the watch list screen and the list of newspaper pages.
+- Users can swipe left and right to switch RSS topics, or can tap the tab at the top of the screen to switch.
+
+## How to run
+- Install android studio latest and run project.
